@@ -1,0 +1,22 @@
+# Compiled python modules.
+*.pyc
+
+# Byte-compiled
+__pycache__/
+.cache/
+
+# Other
+*.DS_Store
+
+# Generated CFQ splits
+scripts/cfq_splits/random_*.json
+scripts/cfq_splits/mcd_*.json
+
+# Symlink to the CFQ dataset directory
+scripts/cfq
+
+# Dataset directory
+data/
+
+# Experiments
+exp/

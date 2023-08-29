@@ -17,7 +17,7 @@
 if [[ "$#" != 4 ]]; then
   echo "Usage: $0 cfq_split neg_method train_hold_out output_tree"
   echo "Possible arguments are as following:"
-  echo "  cfq_split       random or mcd1"
+  echo "  cfq_split       random or mcd"
   echo "  neg_method      random or model"
   echo "  train_hold_out  true or false"
   echo "  output_tree     tree or notree"
@@ -33,11 +33,9 @@ dataset_url="https://storage.cloud.google.com/cfq_dataset/cfq.tar.gz"
 
 # Name of the dataset split file. It will be located in ${cfq_root}/splits.
 if [[ "$1" == "random" ]]; then
-  split_file="random_split.json"
-elif [[ "$1" == "mcd1" ]]; then
-  split_file="mcd1.json"
-elif [[ "$1" == "mcd1_symmetric" ]]; then
-  split_file="mcd1_symmetric.json"
+  split_file="random.json"
+elif [[ "$1" == "mcd" ]]; then
+  split_file="mcd.json"
 else
   echo "Wrong cfq_split: $1"
   exit 1;
@@ -48,7 +46,7 @@ if [[ "$2" == "random" ]]; then
   negative_example="random"
 elif [[ "$2" == "model" ]]; then
   negative_example="model_output"
-  model_output_dir="cfq_model_outputs/$1"
+  model_output_dir="cfq/cfq_model_outputs/$1"
   max_neg=3
   sort_by_score=false
 else

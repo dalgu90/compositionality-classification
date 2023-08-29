@@ -75,11 +75,11 @@ block_attention_sep="false"
 batch_size=112
 if [[ $1 == "random_random_tree" ]]; then
   train_steps=10000
-elif [[ $1 == "mcd1_random_tree" ]]; then
+elif [[ $1 == "mcd_random_tree" ]]; then
   train_steps=10000
-elif [[ $1 == "mcd1_model_tree" ]]; then
+elif [[ $1 == "mcd_model_tree" ]]; then
   train_steps=200000
-elif [[ $1 == "mcd1_symmetric_model_tree" ]]; then
+elif [[ $1 == "mcd_symmetric_model_tree" ]]; then
   train_steps=200000
 else
   train_steps=200000

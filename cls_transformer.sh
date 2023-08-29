@@ -48,10 +48,13 @@ fi
 if [[ $1 == "random_random" ]]; then
   train_steps=10000
   learning_rate=0.001
-elif [[ $1 == "mcd1_random" ]]; then
+elif [[ $1 == "random_model" ]]; then
+  train_steps=20000
+  learning_rate=0.001
+elif [[ $1 == "mcd_random" ]]; then
   train_steps=15000
   learning_rate=0.001
-elif [[ $1 == "mcd1_model" ]]; then
+elif [[ $1 == "mcd_model" ]]; then
   train_steps=20000
   learning_rate=0.001
 else

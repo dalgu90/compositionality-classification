@@ -53,13 +53,15 @@ cross_link_exact="true"
 batch_size=112
 if [[ $1 == "random_random" ]]; then
   train_steps=10000
-elif [[ $1 == "mcd1_random" ]]; then
-  train_steps=10000
-elif [[ $1 == "mcd1_model" ]]; then
+elif [[ $1 == "random_model" ]]; then
   train_steps=100000
-elif [[ $1 == "mcd1_symmetric_random" ]]; then
+elif [[ $1 == "mcd_random" ]]; then
   train_steps=10000
-elif [[ $1 == "mcd1_symmetric_model" ]]; then
+elif [[ $1 == "mcd_model" ]]; then
+  train_steps=100000
+elif [[ $1 == "mcd_symmetric_random" ]]; then
+  train_steps=10000
+elif [[ $1 == "mcd_symmetric_model" ]]; then
   train_steps=200000
 else
   train_steps=200000

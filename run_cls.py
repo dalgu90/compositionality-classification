@@ -66,6 +66,9 @@ def get_epoch_result(model, dataset,
 def main(argv):
   del argv  # unused
 
+  for device in tf.config.list_physical_devices('GPU'):
+    tf.config.experimental.set_memory_growth(device, True)
+
   # Loads hyper-parameters.
   if FLAGS.model == 'lstm':
     hparams = hyperparameters.lstm_model_hparams()

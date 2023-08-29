@@ -19,19 +19,19 @@
 import argparse
 import os
 import sys
+import math
 from typing import Dict, Optional, Text
+
+# For third_party dependency
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'third_party'))
 
 from etcmodel.layers.embedding import EmbeddingLookup
 from etcmodel.layers.transformer import RelativeTransformerLayers
 from modules import datasets
-from official.modeling import tf_utils
+from modules.tensorflow_tutorial import positional_encoding
+from modules.tensorflow_tutorial import Transformer
 import tensorflow as tf
 from tensorflow.keras import layers
-from tensorflow_tutorial.transformer import positional_encoding
-from tensorflow_tutorial.transformer import Transformer
-
-# For third_party dependency
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'third_party'))
 
 
 def build_lstm_model(hparams):
@@ -160,7 +160,7 @@ class RelativeTransformerEncoder(tf.keras.layers.Layer):
         num_hidden_layers=num_layers,
         num_attention_heads=num_heads,
         intermediate_size=dff,
-        hidden_act=tf_utils.get_activation(hidden_act),
+        hidden_act=get_activation(hidden_act),
         hidden_dropout_prob=rate,
         attention_probs_dropout_prob=rate2,
         initializer_range=initializer_range,
@@ -267,3 +267,26 @@ def build_relative_transformer_model(
       hparams.learned_position_encoding, hparams.share_pos_embed,
       hparams.dropout, hparams.attn_dropout, hparams.initializer_range)
   return model
+
+
+def gelu(x):
+  """Gaussian Error Linear Unit.
+
+  This is a smoother version of the RELU.
+  Original paper: https://arxiv.org/abs/1606.08415
+
+  Args:
+    x: float Tensor to perform activation.
+
+  Returns:
+    x with the GELU activation applied.
+  """
+  cdf = 0.5 * (1.0 + tf.tanh(
+      (math.sqrt(2 / math.pi) * (x + 0.044715 * tf.pow(x, 3)))))
+  return x * cdf
+
+def get_activation(name):
+    if name == 'gelu':
+        return gelu
+    else:
+        return tf.keras.activations.get(name)
