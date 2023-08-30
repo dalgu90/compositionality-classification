@@ -36,7 +36,7 @@ flags.DEFINE_enum('model', 'lstm',
                   'Model architecture.')
 flags.DEFINE_string('data_dir', 'data', 'Path to the dataset root.')
 flags.DEFINE_bool('do_train', False, 'Whether to run training.')
-flags.DEFINE_enum('dataset', 'test', ['train', 'dev', 'test'],
+flags.DEFINE_enum('dataset', 'test', ['train', 'train_holdout', 'dev', 'test'],
                   'Dataset split to use when do_train=False.')
 flags.DEFINE_string('output_dir', 'exp_lstm', 'Output directory to save '
                     'log and checkpoints.')
@@ -46,6 +46,7 @@ flags.DEFINE_integer('eval_iter', 500, 'Steps per validation.')
 flags.DEFINE_integer('display_iter', 100, 'Steps per print.')
 
 flags.register_validator('data_dir', os.path.exists, 'Dataset not found.')
+
 
 
 def get_epoch_result(model, dataset, loss_fn, return_f1_auc=False):
@@ -96,7 +97,8 @@ def main(argv):
     dataset_fn = datasets.load_cls_nomask_dataset
 
   if FLAGS.do_train:
-    dataset_train = dataset_fn(hparams, FLAGS.data_dir, name='train')
+    dataset_train = dataset_fn(hparams, FLAGS.data_dir, name='train',
+                               shuffle_repeat=True)
     dataset_val = dataset_fn(hparams, FLAGS.data_dir, name='dev')
     data_iter_train = iter(dataset_train)
   else:

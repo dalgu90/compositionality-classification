@@ -49,7 +49,7 @@ RELATIVE_ATT_ID_XLINK_QR_TO_QS = 9  # 9: same-entity cross link (qr -> qs)
 def load_cls_dataset(hparams,
                      data_root,
                      name = 'train',
-                     shuffle=None):
+                     shuffle_repeat = False):
   """Reads tfrecord file and converts to binary classification dataset."""
   # Reads tfrecord file
   data_fpath = os.path.join(data_root, name + '.tfrecord')
@@ -87,7 +87,7 @@ def load_cls_dataset(hparams,
     return example
 
   # Shuffles and repeats dataset if train mode
-  if shuffle or (name == 'train' and shuffle is None):
+  if shuffle_repeat:
     dataset = raw_dataset.map(
         _parse_function,
         num_parallel_calls=tf.data.experimental.AUTOTUNE,
@@ -110,7 +110,7 @@ def load_cls_dataset(hparams,
 def load_cls_nomask_dataset(hparams,
                             data_root,
                             name = 'train',
-                            shuffle=None):
+                            shuffle_repeat = False):
   """Load non-tree dataset for Relative Transformer."""
   # Reads tfrecord file
   data_fpath = os.path.join(data_root, name + '.tfrecord')
@@ -181,7 +181,7 @@ def load_cls_nomask_dataset(hparams,
     return example
 
   # Shuffles and repeats dataset if train mode
-  if shuffle or (name == 'train' and shuffle is None):
+  if shuffle_repeat:
     dataset = raw_dataset.map(
         _parse_function,
         num_parallel_calls=tf.data.experimental.AUTOTUNE,
@@ -222,7 +222,7 @@ def load_cls_nomask_dataset(hparams,
 def load_cls_mask_dataset(hparams,
                           data_root,
                           name = 'train',
-                          shuffle=None):
+                          shuffle_repeat = False):
   """Reads tfrecord file and converts to classification dataset with tree mask."""
   if not hparams.add_cls_token:
     raise ValueError('CLS token is mandatory')
@@ -473,7 +473,7 @@ def load_cls_mask_dataset(hparams,
     return example
 
   # Shuffles and repeats dataset if train mode
-  if shuffle or (name == 'train' and shuffle is None):
+  if shuffle_repeat:
     dataset = raw_dataset.map(
         _parse_function,
         num_parallel_calls=tf.data.experimental.AUTOTUNE,
