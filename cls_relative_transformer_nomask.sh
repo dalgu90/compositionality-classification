@@ -99,25 +99,27 @@ python run_cls.py \
     --display_iter 100
 
 # Testing
-python run_cls.py \
-    --model ${model} \
-    --data_dir ${data_dir} \
-    --parse_tree_input=False \
-    --num_encoder_layers ${num_encoder_layers} \
-    --use_attention_mask=${use_attention_mask} \
-    --use_relative_attention=${use_relative_attention} \
-    --parse_tree_attention=${parse_tree_attention} \
-    --block_attention=${block_attention} \
-    --block_attention_sep=${block_attention_sep} \
-    --entity_cross_link=${entity_cross_link} \
-    --cross_link_exact=${cross_link_exact} \
-    --restart_query_pos=${restart_query_pos} \
-    --unique_structure_token_pos=${unique_structure_token_pos} \
-    --learned_position_encoding=${train_pos_embed} \
-    --share_pos_embed=${share_pos_embed} \
-    --do_train=false \
-    --dataset "test" \
-    --output_dir ${output_dir} \
-    --class_imbalance ${class_imbalance} \
-    --loss_weight_method ${loss_weight_method} \
-    --batch_size ${batch_size}
+for dataset in "train" "train_holdout" "dev"; do
+    python run_cls.py \
+        --model ${model} \
+        --data_dir ${data_dir} \
+        --parse_tree_input=False \
+        --num_encoder_layers ${num_encoder_layers} \
+        --use_attention_mask=${use_attention_mask} \
+        --use_relative_attention=${use_relative_attention} \
+        --parse_tree_attention=${parse_tree_attention} \
+        --block_attention=${block_attention} \
+        --block_attention_sep=${block_attention_sep} \
+        --entity_cross_link=${entity_cross_link} \
+        --cross_link_exact=${cross_link_exact} \
+        --restart_query_pos=${restart_query_pos} \
+        --unique_structure_token_pos=${unique_structure_token_pos} \
+        --learned_position_encoding=${train_pos_embed} \
+        --share_pos_embed=${share_pos_embed} \
+        --do_train=false \
+        --dataset ${dataset} \
+        --output_dir ${output_dir} \
+        --class_imbalance ${class_imbalance} \
+        --loss_weight_method ${loss_weight_method} \
+        --batch_size ${batch_size}
+done

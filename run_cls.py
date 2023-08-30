@@ -17,6 +17,7 @@
 """Main Python file to run the classification experiments."""
 
 import os
+import json
 from typing import Tuple
 
 from absl import app
@@ -165,6 +166,18 @@ def main(argv):
                                            return_f1_auc=True)
     logging.info('(Test)  step %6i, loss %.6f, acc=%.4f, f1=%.4f, auc=%.4f',
                  init_step, loss, acc, f1, auc)
+    # Save the result
+    result_fpath = os.path.join(FLAGS.output_dir,
+                                f'result_{FLAGS.dataset}.json')
+    logging.info('Saving result to %s', result_fpath)
+    with open(result_fpath, 'w') as fd:
+        result = {
+            'loss': float(loss),
+            'acc': float(acc),
+            'f1': float(f1),
+            'auc': float(auc)
+        }
+        json.dump(result, fd, indent=4)
 
 
 if __name__ == '__main__':
