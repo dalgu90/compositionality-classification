@@ -48,19 +48,29 @@ flags.DEFINE_integer('display_iter', 100, 'Steps per print.')
 flags.register_validator('data_dir', os.path.exists, 'Dataset not found.')
 
 
-def get_epoch_result(model, dataset,
-                     loss_fn):
+def get_epoch_result(model, dataset, loss_fn, return_f1_auc=False):
   """Evaluates loss and accuracy of the model on the dataset."""
-  total_loss, total_correct = [], []
+  total_logits, total_labels = [], []
   for batch_inputs, batch_labels in dataset:
     batch_logits = model(batch_inputs)
-    loss = loss_fn(batch_labels, batch_logits)
-    correct = batch_labels == tf.cast(batch_logits > 0.0, tf.int32)
-    total_loss.append(loss)
-    total_correct.append(correct)
-  loss = tf.reduce_mean(tf.concat(total_loss, -1))
-  acc = tf.reduce_mean(tf.cast(tf.concat(total_correct, -1), tf.float32))
-  return loss, acc
+    total_logits.append(batch_logits)
+    total_labels.append(batch_labels)
+  total_logits = tf.concat(total_logits, -1)
+  total_labels = tf.concat(total_labels, -1)
+  total_preds = tf.cast(total_logits > 0.0, tf.int32)
+  loss = tf.reduce_mean(loss_fn(total_labels, total_logits))
+  acc = tf.reduce_mean(tf.cast(total_labels == total_preds, tf.float32))
+  if not return_f1_auc:
+    return loss, acc
+  else:
+    tp = tf.reduce_sum(tf.cast((total_labels==1) & (total_preds==1), tf.int32))
+    fp = tf.reduce_sum(tf.cast((total_labels==0) & (total_preds==1), tf.int32))
+    fn = tf.reduce_sum(tf.cast((total_labels==1) & (total_preds==0), tf.int32))
+    f1 = 2 * tp / (2 * tp + fp + fn)
+    m = tf.keras.metrics.AUC()
+    m.update_state(total_labels, 1.0 / (1.0 + tf.exp(-total_logits)))
+    auc = m.result().numpy()
+    return loss, acc, f1, auc
 
 
 def main(argv):
@@ -149,8 +159,10 @@ def main(argv):
         logging.info('Saved checkpoint to %s', ckpt_path)
   else:
     # Testing model
-    loss, acc = get_epoch_result(model, dataset_test, loss_fn)
-    logging.info('(Test)  step %6i, loss %.6f, acc=%.4f', init_step, loss, acc)
+    loss, acc, f1, auc  = get_epoch_result(model, dataset_test, loss_fn,
+                                           return_f1_auc=True)
+    logging.info('(Test)  step %6i, loss %.6f, acc=%.4f, f1=%.4f, auc=%.4f',
+                 init_step, loss, acc, f1, auc)
 
 
 if __name__ == '__main__':
