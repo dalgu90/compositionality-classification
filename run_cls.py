@@ -27,6 +27,7 @@ from modules import hyperparameters
 from modules import losses
 from modules import models
 from modules import optimizers
+from sklearn import metrics
 import tensorflow as tf
 
 FLAGS = flags.FLAGS
@@ -68,9 +69,8 @@ def get_epoch_result(model, dataset, loss_fn, return_f1_auc=False):
     fp = tf.reduce_sum(tf.cast((total_labels==0) & (total_preds==1), tf.int32))
     fn = tf.reduce_sum(tf.cast((total_labels==1) & (total_preds==0), tf.int32))
     f1 = 2 * tp / (2 * tp + fp + fn)
-    m = tf.keras.metrics.AUC()
-    m.update_state(total_labels, 1.0 / (1.0 + tf.exp(-total_logits)))
-    auc = m.result().numpy()
+    total_probs = 1.0 / (1.0 + tf.exp(-total_logits))
+    auc = metrics.roc_auc_score(total_labels, total_probs)
     return loss, acc, f1, auc
 
 

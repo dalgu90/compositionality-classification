@@ -8,7 +8,7 @@ The code runs with Tensorflow 2.5. Set up a conda environment as follows.
 # You can name the environment as you like.
 $ conda create --name cfq python=3.8 cudatoolkit=11.3 cudnn=8.2
 $ conda activate cfq
-$ pip install tensorflow==2.5 numpy==1.19.5
+$ pip install tensorflow==2.5 numpy==1.19.5 scikit-learn==0.23.1
 ```
 
 ## 2. Download the dataset
