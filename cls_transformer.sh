@@ -63,29 +63,20 @@ else
 fi
 
 # Training
-#python run_cls.py \
-    #--model ${model} \
-    #--data_dir ${data_dir} \
-    #--do_train=true \
-    #--output_dir ${output_dir} \
-    #--class_imbalance ${class_imbalance} \
-    #--loss_weight_method ${loss_weight_method} \
-    #--learning_rate ${learning_rate} \
-    #--train_steps ${train_steps} \
-    #--checkpoint_iter 1000 \
-    #--eval_iter 1000 \
-    #--display_iter 100
+python run_cls.py \
+    --model ${model} \
+    --data_dir ${data_dir} \
+    --do_train=true \
+    --output_dir ${output_dir} \
+    --class_imbalance ${class_imbalance} \
+    --loss_weight_method ${loss_weight_method} \
+    --learning_rate ${learning_rate} \
+    --train_steps ${train_steps} \
+    --checkpoint_iter 1000 \
+    --eval_iter 1000 \
+    --display_iter 100
 
 # Testing
-#python run_cls.py \
-    #--model ${model} \
-    #--data_dir ${data_dir} \
-    #--do_train=false \
-    #--dataset "test" \
-    #--output_dir ${output_dir} \
-    #--class_imbalance ${class_imbalance} \
-    #--loss_weight_method ${loss_weight_method}
-
 for dataset in "train" "train_holdout" "dev"; do
     python run_cls.py \
         --model ${model} \
